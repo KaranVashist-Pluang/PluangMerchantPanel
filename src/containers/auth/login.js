@@ -60,7 +60,7 @@ class Login extends React.Component {
                     this.props.history.push(LOCAL.PURCHASE_ORDERS);
                 })
                 .catch((error) => {
-                    this.setError(true, error.error_message);
+                    this.setError(true, "Invalid Email/Password");
                 })
                 .finally(() => {
                     this.props.dispatch(hideLoading());
