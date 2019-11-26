@@ -4,6 +4,7 @@
 
 import axios from "axios";
 import AuthService from "./AuthService";
+import { NotificationManager } from "react-notifications";
 
 axios.interceptors.request.use((config) => {
     config.headers["Authorization"] = `Bearer ${AuthService.getAccessToken()}`;
@@ -54,6 +55,7 @@ export function makeRequest (config) {
 
 export function errorHandler (reject, err, ignoreError) {
     if (err.code === "ECONNABORTED") {
+        NotificationManager.error(JSON.stringify(err.data), 'Error Code:' + err.code, 5000);
         return reject(err);
     }
 
@@ -73,10 +75,16 @@ export function errorHandler (reject, err, ignoreError) {
         default:
             if (err.data.errors) {
                 msg = "Input is invalid for " + Object.keys(err.data.errors).join(", ");
-            } else if (err.data.error_message) {
+            } else if (err && err.data && err.data.error_message) {
                 msg = err.data.error_message;
             }
+            if (!ignoreError) {
+                NotificationManager.error(msg, 'Error Code:' + err.data.code, 5000);
+            }
             return reject(err.data);
+    }
+    if (!ignoreError) {
+        NotificationManager.error(err.message, 'Error Occurred', 5000);
     }
     return reject(err.message);
 }
