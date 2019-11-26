@@ -73,7 +73,7 @@ export function errorHandler (reject, err, ignoreError) {
             window.location.href = "/";
             break;
         default:
-            if (err.data.errors) {
+            if (err && err.data && err.data.errors) {
                 msg = "Input is invalid for " + Object.keys(err.data.errors).join(", ");
             } else if (err && err.data && err.data.error_message) {
                 msg = err.data.error_message;
